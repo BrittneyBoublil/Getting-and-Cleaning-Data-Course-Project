@@ -2,7 +2,7 @@ library(dplyr)
 
 filename <- "FinalProject.zip"
 
-# LOAD IN THE DATA SETS
+# STEP 1: LOAD IN THE DATA SETS
 
 # checking if data has been downloaded already
 if (!file.exists(filename)){
@@ -15,7 +15,7 @@ if (!file.exists("UCI HAR Dataset")) {
   unzip(filename) 
 }
 
-# ORGANIZE DATASETS
+# STEP 2: ORGANIZE DATASETS
 features <- read.table('UCI HAR Dataset/features.txt', 
                        col.names = c('n','functions'))
 activities <- read.table('UCI HAR Dataset/activity_labels.txt', 
@@ -33,23 +33,23 @@ x_train <- read.table('UCI HAR Dataset/train/X_train.txt',
 y_train <- read.table('UCI HAR Dataset/train/y_train.txt',
                       col.names = 'code')
 
-# STEP 1: MERGES THE TRAINING AND THE TEST SETS TO CREATE ONE DATA SET
+# STEP 3: MERGES THE TRAINING AND THE TEST SETS TO CREATE ONE DATA SET
 x_data <- rbind(x_train, x_test)
 y_data <- rbind(y_train, y_test)
 subject_data <- rbind(subject_train, subject_test)
 merged_data <- cbind(subject_data, x_data, y_data)
 
-# STEP 2: EXTRACTS ONLY THE MEASUREMENTS ON THE MEAN AND STANDARD 
+# STEP 4: EXTRACTS ONLY THE MEASUREMENTS ON THE MEAN AND STANDARD 
 # DEVIATION FOR EACH MEASUREMENT
 merged_data_tidy <- merged_data %>% select(subject, code, 
                                            contains('mean'),
                                            contains('std'))
 
-# STEP 3: USES DESCRIPTIVE ACTIVITY NAMES TO NAME THE ACTIVITIES IN THE 
+# STEP 5: USES DESCRIPTIVE ACTIVITY NAMES TO NAME THE ACTIVITIES IN THE 
 # DATA SET
 merged_data_tidy$code <- activities[merged_data_tidy$code, 2]
 
-# STEP 4: APPROPRIATELY LABELS THE DATA SET WITH DESCRIPTIVE VARIABLE 
+# STEP 6: APPROPRIATELY LABELS THE DATA SET WITH DESCRIPTIVE VARIABLE 
 # NAMES
 names(merged_data_tidy)[1] = 'Subject'
 names(merged_data_tidy)[2] = 'Activity'
@@ -82,7 +82,7 @@ names(merged_data_tidy)<-gsub('gravity', 'Gravity',
                               names(merged_data_tidy))
 
 
-# STEP 5: FROM THE DATA SET IN STEP 4, CREATES A SECOND, INDEPENDENT
+# STEP 7: FROM THE DATA SET IN STEP 6, CREATES A SECOND, INDEPENDENT
 # TIDY DATA SET WITH THE AVERAGE OF EACH VARIABLE FOR EACH ACTIVITY
 # AND EACH SUBJECT
 TidyData <- merged_data_tidy %>%
